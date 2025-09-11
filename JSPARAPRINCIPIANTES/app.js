@@ -63,8 +63,17 @@ let userName = 'gordon'
 
 let numberone= 60
 let numertwo = 100
-let res = numberone+numertwo
-console.log(res)
-
 let res = numberone< numertwo
+
+let passwordDB = 'pepe123'
+let input =  'kdeidieeoiide'
+let res = input == passwordDB
 console.log(res)
+let score = 70
+if (score > 30){
+    console.log('ocupas practicas más')
+} else if (score > 15){
+    console.log('estás mejorando')
+} else {
+    console.log('ocupas seguir un tutorial ')
+}
