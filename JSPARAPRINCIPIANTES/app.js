@@ -32,3 +32,26 @@ true
     "profesional": true;
 }
 console.log("esto es un string")
+
+var nameuser = 'jonh'
+let lastname = 'carter'
+console.log(lastname)
+
+
+nombredelusaurio = 'jonh'
+console.log(nombredelusaurio)
+
+let lastname = 'carter'
+console.log(lastname)
+
+
+nombredelusaurio = 'jonh'
+console.log(nombredelusaurio)
+nameuser= 'pepe';
+
+console.log(lastname)
+
+nameuser= 'pepe';
+
+const PI = 3.1416
+console.log(PI)
