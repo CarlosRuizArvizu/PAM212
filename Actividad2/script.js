@@ -1,4 +1,3 @@
-// Definimos la clase
 class inicioPAM {
   ReglamentoPOO() {
     return "\n1. Participación activa en clase \n2. Trabajos en classroom \n3. Entregas completas \n4.Respetar tiempos de entrega \n5.Presentación de trabajo calidad universitaria";
