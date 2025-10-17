@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { Text, StyleSheet, View } from 'react-native';
 import ContadorScreen from './ContadorScreen';
-import BotonesScreen from './BotonesScreen';
-import BotonesScreen from './BotonesScreen';
+import BotonesScreen from './Botones/BotonesScreen';
+import textInput from './TextInput';
 
-import { Button, TextInput } from 'react-native-web';
+import { Button, TextInput } from 'react-native';
+
 
 
 export default function MenuScreen() {
-    const [screen, setScreen]=useState('men');
+    const [screen, setScreen]=useState('menu');
     switch(screen) {
         case 'contador':
             return <ContadorScreen/>;
