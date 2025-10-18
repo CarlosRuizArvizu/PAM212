@@ -1,52 +1,70 @@
 import React, { useState } from 'react';
-import { Text, StyleSheet, View } from 'react-native';
+import { Text, StyleSheet, View, Button } from 'react-native';
 import ContadorScreen from './ContadorScreen';
 import BotonesScreen from './Botones/BotonesScreen';
-import textInput from './TextInput';
-
-import { Button, TextInput } from 'react-native';
-
-
+import TextInputScreen from './TextInput';
+import ImageBackgroundScreen from './ImageBackground';
+import ScrollViewScreen from './ScrollView';
+import ActivityIndicatorScreen from './ActivityIndicator';
+import FlatListScreen from './FlatList';
+import ModalScreen from './Modal';
+import BottomSheetScreen from './BottomSheet';
 
 export default function MenuScreen() {
-    const [screen, setScreen]=useState('menu');
-    switch(screen) {
-        case 'contador':
-            return <ContadorScreen/>;
-        case 'botones':
-            return <BotonesScreen/>;
-        case 'textInput':
-            return <TextInput/>;
-        case 'ImageBackgroung':
-            return <ImageBackgroung/>;                
-        case 'menu':
-            default: 
-                return (
-                    <View style={styles.container}>
-                    <View>
-                        <Text>Menu de Practicas</Text>
-                        <Button onPress={()=>setScreen('contador')} title='Pract:Contador'/>
-                        <Button onPress={()=>setScreen('botones')} title='Pract:Botones'/>
-                        <Button onPress={()=>setScreen('textInput')} title='Pract:TextInput'/>
-                        <Button onPress={()=>setScreen('ImageBackgroung')} title='Pract:ImageBackgroung'/>
-                        <Button onPress={()=>setScreen('ScrollView')} title='Pract:ScrollView'/>
-                        <Button onPress={()=>setScreen('ActivityIndicator')} title='Pract:ActivityIndicator'/>
-                        <Button onPress={()=>setScreen('FlatList')} title='Pract:FlatList'/>
-                        <Button onPress={()=>setScreen('Modal')} title='Pract:Modal'/>
-                        <Button onPress={()=>setScreen('BottomSheet')} title='Pract:BottomSheet'/>
-                    </View>
-                    </View>
-    )
+  const [screen, setScreen] = useState('menu');
 
-    }
 
+  switch (screen) {
+    case 'contador':
+      return <ContadorScreen />;
+    case 'botones':
+      return <BotonesScreen />;
+    case 'textInput':
+      return <TextInputScreen />;
+    case 'ImageBackground':
+      return <ImageBackgroundScreen />;
+    case 'ScrollView':
+      return <ScrollViewScreen />;
+    case 'ActivityIndicator':
+      return <ActivityIndicatorScreen />;
+    case 'FlatList':
+      return <FlatListScreen />;
+    case 'Modal':
+      return <ModalScreen />;
+    case 'BottomSheet':
+      return <BottomSheetScreen />;
+    default:
+      return (
+        <View style={styles.container}>
+          <Text style={styles.title}>Menú de Prácticas</Text>
+
+          <Button title="Pract: Contador" onPress={() => setScreen('contador')} />
+          <Button title="Pract: Botones" onPress={() => setScreen('botones')} />
+          <Button title="Pract: TextInput" onPress={() => setScreen('textInput')} />
+          <Button title="Pract: ImageBackground" onPress={() => setScreen('ImageBackground')} />
+          <Button title="Pract: ScrollView" onPress={() => setScreen('ScrollView')} />
+          <Button title="Pract: ActivityIndicator" onPress={() => setScreen('ActivityIndicator')} />
+          <Button title="Pract: FlatList" onPress={() => setScreen('FlatList')} />
+          <Button title="Pract: Modal" onPress={() => setScreen('Modal')} />
+          <Button title="Pract: BottomSheet" onPress={() => setScreen('BottomSheet')} />
+        </View>
+      );
+  }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#7cb5ffff',
+    backgroundColor: '#0B0B0B',
     alignItems: 'center',
     justifyContent: 'center',
+    gap: 10,
+    padding: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#ffffffff', 
+    marginBottom: 20,
   },
 });
