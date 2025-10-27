@@ -9,6 +9,10 @@ import ActivityIndicatorScreen from './ActivityIndicator';
 import FlatListScreen from './FlatList';
 import ModalScreen from './Modal';
 import BottomSheetScreen from './BottomSheet';
+import Repaso1Screen from './Repaso1';
+import ScrollView2 from './ScrollView2';
+
+
 
 export default function MenuScreen() {
   const [screen, setScreen] = useState('menu');
@@ -33,6 +37,10 @@ export default function MenuScreen() {
       return <ModalScreen />;
     case 'BottomSheet':
       return <BottomSheetScreen />;
+    case 'Repaso1':
+      return <Repaso1Screen />;
+    case 'ScrollView2':
+      return <ScrollView2 />;
     default:
       return (
         <View style={styles.container}>
@@ -43,10 +51,12 @@ export default function MenuScreen() {
           <Button title="Pract: TextInput" onPress={() => setScreen('textInput')} />
           <Button title="Pract: ImageBackground" onPress={() => setScreen('ImageBackground')} />
           <Button title="Pract: ScrollView" onPress={() => setScreen('ScrollView')} />
+          <Button title="Pract: ScrollView 2" onPress={() => setScreen('ScrollView2')} />
           <Button title="Pract: ActivityIndicator" onPress={() => setScreen('ActivityIndicator')} />
           <Button title="Pract: FlatList" onPress={() => setScreen('FlatList')} />
           <Button title="Pract: Modal" onPress={() => setScreen('Modal')} />
           <Button title="Pract: BottomSheet" onPress={() => setScreen('BottomSheet')} />
+          <Button title="Pract: Repaso 1" onPress={() => setScreen('Repaso1')} />
         </View>
       );
   }
