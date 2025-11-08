@@ -1,94 +1,65 @@
-import React, { useState } from 'react';
-import { View,Text, TextInput, Alert,Button,StyleSheet, FlatList, ImageBackground} from 'react-native';
-import SwitchButton from './Switch'
-const Noticias = [
-  { id: '1', noticia: 'Deportes' },
-  { id: '2', noticia: 'Entretenimiento ' },
-  { id: '3', noticia: 'Nacional' },
-  { id: '4', noticia: 'Tecnología' },
+import { ScrollView, Text, StyleSheet, TextInput, View } from 'react-native-web'
+import React from 'react'
+
+const DATA = [
+  {id:1},
+  {id:2},
+  {id:3},
+  {id:4},
 ];
-export default function TextScreen() {
-    const [nombre, setNombre] = useState('');
-    const [contrasena, setContrasena] = useState('');
-    const [comentario, setComentario] = useState('');
-    const [mensaje, setMensaje] = useState ('');
-    const enviarMensaje = () => {
-        if(nombre.trim() === '' || contrasena.trim() === ''|| comentario.trim() === ''){
-            Alert.alert('Error','Por favor completa todos los campos');
-            alert('Error: Por favor completa todos los campos');
-            setMensaje('Faltan campos por llenar');
-        } else {
-            Alert.alert('Bieen !');
-            alert('Bieen!');
-            setMensaje('Bieen!');
-        }
-    };
 
-return (
-  
-    <View style={styles.container}>
-        <Text style={styles.title}></Text>
-        {/* Nombre */}
-        <TextInput style={styles.input}
-        placeholder='Escribe tu nombre'
-        value={nombre}
-        onChangeText={setNombre}
-        keyboardType='default'
-        />
-
-        {/* Constraseña */}
-        <TextInput 
-        style={styles.input}
-        placeholder='Escribe tu contraseña'
-        value={contrasena}
-        onChangeText={setContrasena}
-        secureTextEntry={true}
-        />
-
-          {/* Varias líneas para comentario */}
-        <TextInput 
-        style={[styles.input, {height:100, textAlignVertical:'top'}]}
-        placeholder='Escribe tu contraseña'
-        value={comentario}
-        onChangeText={setComentario}
-        multiline={true}
-        numberOfLines={4}
-        />
-
-        <Button title='Leer más' onPress={enviarMensaje}/>
-        <Text style={styles.mensaje}>{mensaje}</Text>
-    </View>
+const SimpleHeader = () => {
+  return(
+  <View style = {styles.header}>
+    <Text style = {styles.title}>QNews</Text>
+  </View>
 );
-}
-const styles = StyleSheet.create({
+};
 
-  container:{
-    flex:1,
-    backgroundColor: '#7cb5ffff', 
-    justifyContent:'center',
-    alignItems:'center',
-    padding:20,
-    gap:10
+const SimpleScrollView = () => {
+  return (
+    <View>
+    <SimpleHeader/>
+    <ScrollView
+     showVerticalScrollIndicator={false}
+    >
+      {DATA.map((item) => {
+        return (
+          <View style={styles.card} key = {item.id}>
+          <Text style = {styles.subtitle}> ¡Soy una tarjeta! </Text>
+          </View>
+        );
+      })}
+    </ScrollView>
+    </View>
+  );
+};
+
+export default  SimpleScrollView;
+
+const styles = StyleSheet.create({
+  header: {
+    height: 120,
+    backgroundColor: 'rgba(71, 44, 176, 1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 25,
   },
   title:{
-    fontSize:25,
-    fontWeight:'bold'
+    color: '#ffffffff',
+    fontWeight: 'bold',
+    fontSize: 20
   },
-   itemTitle: {
-    color: "white",
-    fontSize: 16,
+  card:{
+    height: 100,
+    backgroundColor: '#341c83ff',
+    marginTop: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 10,
   },
-  input:{
-    width:'80%',
-    borderWidth:3,
-    borderColor:'#a47bf7ff',
-    padding:12,
-    borderRadius:9
+  subtitle: {
+    color: '#ffffffff',
+    fontWeight: 'bold',
   },
-  mensaje:{
-    marginTop:20,
-    fontSize:18,
-    color:'#e431f1ff',
-    textAlign:'center'
-  }
-});
+})
