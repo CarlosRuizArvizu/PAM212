@@ -7,12 +7,11 @@ class DatabaseService {
         this.storageKey = 'usuarios';
     }
 
-    // Inicializa la base de datos dependiendo de la plataforma (web o móvil)
     async initialize() {
         if (Platform.OS === 'web') {
-            console.log('Usando LocalStorage para web');
+            console.log('Usando LocalStorage (WEB)');
         } else {
-            console.log('Usando SQLite para móvil');
+            console.log('Usando SQLite (MÓVIL)');
             this.db = await SQLite.openDatabaseAsync('miapp.db');
 
             await this.db.execAsync(`
@@ -25,7 +24,7 @@ class DatabaseService {
         }
     }
 
-    // Obtener todos los usuarios
+    // SELECT
     async getAll() {
         if (Platform.OS === 'web') {
             const data = localStorage.getItem(this.storageKey);
@@ -35,21 +34,18 @@ class DatabaseService {
         }
     }
 
-    // Agregar un nuevo usuario
+    // INSERT
     async add(nombre) {
         if (Platform.OS === 'web') {
             const usuarios = await this.getAll();
-
             const nuevoUsuario = {
                 id: Date.now(),
                 nombre,
                 fecha_creacion: new Date().toISOString()
             };
-
             usuarios.unshift(nuevoUsuario);
             localStorage.setItem(this.storageKey, JSON.stringify(usuarios));
             return nuevoUsuario;
-
         } else {
             const result = await this.db.runAsync(
                 'INSERT INTO usuarios(nombre) VALUES(?)',
@@ -63,7 +59,39 @@ class DatabaseService {
             };
         }
     }
+
+    // UPDATE
+    async update(id, nombre) {
+        if (Platform.OS === 'web') {
+            const usuarios = await this.getAll();
+            const index = usuarios.findIndex(u => u.id === id);
+            if (index !== -1) {
+                usuarios[index].nombre = nombre;
+                localStorage.setItem(this.storageKey, JSON.stringify(usuarios));
+            }
+            return true;
+        } else {
+            await this.db.runAsync(
+                'UPDATE usuarios SET nombre = ? WHERE id = ?',
+                [nombre, id]
+            );
+            return true;
+        }
+    }
+
+    // DELETE
+    async delete(id) {
+    if (Platform.OS === 'web') {
+        let usuarios = await this.getAll();
+        usuarios = usuarios.filter(u => Number(u.id) !== Number(id));
+        localStorage.setItem(this.storageKey, JSON.stringify(usuarios));
+        return true;
+    } else {
+        await this.db.runAsync('DELETE FROM usuarios WHERE id = ?', [id]);
+        return true;
+    }
+    }
+
 }
 
-// Exportar instancia única
 export default new DatabaseService();

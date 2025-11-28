@@ -7,7 +7,8 @@ import {
     FlatList,
     StyleSheet,
     Alert,
-    ActivityIndicator
+    ActivityIndicator,
+    Platform
 } from 'react-native';
 
 import { UsuarioController } from '../controllers/UsuarioController';
@@ -20,6 +21,10 @@ export default function UsuarioView() {
     const [nombre, setNombre] = useState('');
     const [loading, setLoading] = useState(true);
     const [guardando, setGuardando] = useState(false);
+
+    // Estados para editar
+    const [editando, setEditando] = useState(null);
+    const [nuevoNombre, setNuevoNombre] = useState('');
 
     const cargarUsuarios = useCallback(async () => {
         try {
@@ -51,14 +56,61 @@ export default function UsuarioView() {
 
         try {
             setGuardando(true);
-            const usuarioCreado = await controller.crearUsuario(nombre);
-            Alert.alert('Usuario Creado', `"${usuarioCreado.nombre}" guardado con ID: ${usuarioCreado.id}`);
+            await controller.crearUsuario(nombre);
             setNombre('');
         } catch (error) {
             Alert.alert('Error', error.message);
         } finally {
             setGuardando(false);
         }
+    };
+
+    const iniciarEdicion = (usuario) => {
+        setEditando(usuario.id);
+        setNuevoNombre(usuario.nombre);
+    };
+
+    const guardarCambios = async () => {
+        try {
+            await controller.actualizarUsuario(editando, nuevoNombre);
+            setEditando(null);
+            setNuevoNombre('');
+        } catch (error) {
+            Alert.alert('Error', error.message);
+        }
+    };
+
+    const eliminar = (id) => {
+    // 💻 WEB: usar window.confirm
+    if (Platform.OS === 'web') {
+        const confirmar = window.confirm('¿Deseas eliminar este usuario?');
+        if (confirmar) {
+        controller
+            .eliminarUsuario(id)
+            .catch((error) => Alert.alert('Error', error.message));
+        }
+        return;
+    }
+
+    // 📱 MÓVIL: usar Alert con botones
+    Alert.alert(
+        'Eliminar Usuario',
+        '¿Deseas eliminar este usuario?',
+        [
+        { text: 'Cancelar', style: 'cancel' },
+        {
+            text: 'Eliminar',
+            style: 'destructive',
+            onPress: async () => {
+            try {
+                await controller.eliminarUsuario(id);
+            } catch (error) {
+                Alert.alert('Error', error.message);
+            }
+            },
+        },
+        ]
+    );
     };
 
     const renderUsuario = ({ item, index }) => (
@@ -68,34 +120,54 @@ export default function UsuarioView() {
             </View>
 
             <View style={styles.userInfo}>
-                <Text style={styles.userName}>{item.nombre}</Text>
-                <Text style={styles.userId}>ID: {item.id}</Text>
+                {editando === item.id ? (
+                    <>
+                        <TextInput
+                            style={styles.input}
+                            value={nuevoNombre}
+                            onChangeText={setNuevoNombre}
+                        />
 
-                <Text style={styles.userDate}>
-                    {new Date(item.fechaCreacion).toLocaleDateString('es-MX', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                    })}
-                </Text>
+                        <TouchableOpacity style={styles.saveButton} onPress={guardarCambios}>
+                            <Text style={styles.saveButtonText}>Guardar</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={() => setEditando(null)}>
+                            <Text style={{ color: 'red', marginTop: 5 }}>Cancelar</Text>
+                        </TouchableOpacity>
+                    </>
+                ) : (
+                    <>
+                        <Text style={styles.userName}>{item.nombre}</Text>
+                        <Text style={styles.userId}>ID: {item.id}</Text>
+
+                        <View style={{ flexDirection: 'row', marginTop: 8 }}>
+                            <TouchableOpacity onPress={() => iniciarEdicion(item)}>
+                                <Text style={{ color: '#007AFF', marginRight: 20 }}>Editar</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity onPress={() => eliminar(item.id)}>
+                                <Text style={{ color: 'red' }}>Eliminar</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </>
+                )}
             </View>
         </View>
     );
 
     return (
         <View style={styles.container}>
-            
-            {/* ======= TÍTULO PRINCIPAL ======= */}
-            <Text style={styles.mainTitle}>INSERT & SELECT</Text>
+
+            <Text style={styles.mainTitle}>INSERT, SELECT, UPDATE y DELETE</Text>
             <Text style={styles.subTitle}>iOS (SQLite)</Text>
 
-            {/* ======= TARJETA INSERTAR USUARIO ======= */}
             <View style={styles.card}>
                 <Text style={styles.sectionTitle}>Insertar Usuario</Text>
 
                 <TextInput
                     style={styles.input}
-                    placeholder="Escribe el nombre del usuario"
+                    placeholder="Nombre del usuario"
                     value={nombre}
                     onChangeText={setNombre}
                 />
@@ -107,7 +179,6 @@ export default function UsuarioView() {
                 </TouchableOpacity>
             </View>
 
-            {/* ======= LISTA DE USUARIOS ======= */}
             <View style={styles.listHeader}>
                 <Text style={styles.sectionTitle}>Lista de Usuarios</Text>
 
@@ -131,8 +202,6 @@ export default function UsuarioView() {
     );
 }
 
-
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -154,7 +223,6 @@ const styles = StyleSheet.create({
         marginBottom: 20
     },
 
-    /* Tarjeta */
     card: {
         backgroundColor: '#fff',
         padding: 16,
@@ -190,7 +258,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
 
-    /* Lista */
     listHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -237,9 +304,16 @@ const styles = StyleSheet.create({
         color: '#555'
     },
 
-    userDate: {
-        color: '#888',
-        marginTop: 4,
-        fontStyle: 'italic'
+    saveButton: {
+        backgroundColor: "#34C759",
+        padding: 8,
+        borderRadius: 8,
+        marginTop: 6,
+        alignItems: "center"
+    },
+
+    saveButtonText: {
+        color: "#fff",
+        fontWeight: "bold"
     }
 });
